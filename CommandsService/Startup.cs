@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CommandsService.AsyncDataServices;
 using CommandsService.Data;
 using CommandsService.EventProcessing;
+using CommandsService.SyncDataServices.Grpc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -35,6 +36,7 @@ namespace CommandsService
             services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMem"));
 
             services.AddScoped<ICommandRepo, CommandRepo>();
+            services.AddScoped<IPlatformDataClient, PlatformDataClient>();
 
             services.AddSingleton<IEventProcessor, EventProcessor>();
 
@@ -67,6 +69,8 @@ namespace CommandsService
             {
                 endpoints.MapControllers();
             });
+
+            PrepDb.PrepPopulation(app);
         }
     }
 }
